@@ -4,7 +4,9 @@
 // Fragerunden-Antworten werden OHNE Geräte-Bezug gespeichert.
 import HTML from "./index.html";
 
-const KINDS = ["kummer", "lob"];
+// Segelboot-Zonen: wind = läuft gut, anker = bremst, felsen = Risiko, insel = Ziel
+const KINDS = ["wind", "anker", "felsen", "insel"];
+const LEGACY = { kummer: "anker", lob: "wind" };
 const CATEGORIES = ["inhalt", "tempo", "organisation", "tools", "miteinander", "sonstiges"];
 const STATUSES = ["neu", "gehoert", "besprochen", "umgesetzt"];
 const TYPES = ["entdecker", "shopper", "urlauber", "gefangener"];
@@ -99,7 +101,7 @@ const currentRound = db => db.prepare("SELECT * FROM rounds ORDER BY id DESC LIM
 
 function publicEntry(r, mine) {
   return {
-    id: r.id, kind: r.kind, category: r.category, text: r.text, better: r.better || "",
+    id: r.id, kind: LEGACY[r.kind] || r.kind, category: r.category, text: r.text, better: r.better || "",
     status: r.status, action: r.action || "", votes: r.votes, created: r.created_at, done: r.done_at || null,
     hidden: !!r.hidden, mine: mine ? mine.has(r.id) : false,
   };
@@ -159,11 +161,11 @@ async function handleApi(request, env, url) {
     if (!retro && await rateLimited(db, "post:" + voter, 8, 10 * 60_000)) {
       return json({ error: "Kurze Pause, bitte. Du hast gerade viel eingeworfen." }, 429);
     }
-    const kind = KINDS.includes(body.kind) ? body.kind : "kummer";
+    const kind = KINDS.includes(body.kind) ? body.kind : (LEGACY[body.kind] || "anker");
     const category = CATEGORIES.includes(body.category) ? body.category : "sonstiges";
     const mood = Number.isInteger(body.mood) && body.mood >= 1 && body.mood <= 5 ? body.mood : null;
     const text = clean(body.text, 500);
-    const better = kind === "kummer" ? clean(body.better, 300) : "";
+    const better = kind === "wind" ? "" : clean(body.better, 300);
     if (!text && !mood) return json({ error: "Schreib etwas oder wähl eine Stimmung." }, 400);
     for (const t of [text, better]) {
       if (!t) continue;

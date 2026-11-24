@@ -217,6 +217,38 @@ body:not(.retro) .ronly{display:none!important}
 .addact button{border:0;background:var(--teal);color:#fff;border-radius:10px;padding:0 14px;font-weight:700}
 .sublbl{font-weight:700;font-size:14px;margin:16px 0 6px}
 
+.zones{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.zone{border:1px solid var(--line);background:#fff;border-radius:14px;padding:13px 14px;text-align:left;display:flex;gap:12px;align-items:flex-start;transition:.15s}
+.zone .em{font-size:24px;line-height:1.1}
+.zone b{display:block;font-size:15px}
+.zone small{color:var(--muted);font-size:13px}
+.zone.on{border-color:var(--zc);box-shadow:inset 0 0 0 1px var(--zc);background:color-mix(in srgb,var(--zc) 8%,#fff)}
+.zone.on b{color:var(--zc)}
+.ztag{font-size:12.5px;font-weight:700;border-radius:7px;padding:3px 8px;color:var(--zc);background:color-mix(in srgb,var(--zc) 10%,#fff)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.boat{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px;border-radius:22px;background:linear-gradient(180deg,#e0f2fe 0%,#f0f9ff 48%,#bae6fd 52%,#93cff2 100%);position:relative}
+.boat::before{content:"⛵";position:absolute;left:50%;top:50%;transform:translate(-50%,-62%);font-size:56px;filter:drop-shadow(0 4px 6px rgba(15,76,129,.25));z-index:1;pointer-events:none}
+.bz{background:rgba(255,255,255,.93);border-radius:18px;padding:14px;border:2px solid color-mix(in srgb,var(--zc) 35%,#fff);min-height:220px}
+.bz h3{margin:0 0 4px;display:flex;align-items:center;gap:8px;font-size:15px}
+.bz h3 span{background:var(--zc);color:#fff;border-radius:999px;padding:4px 11px;font-size:13px;letter-spacing:.03em}
+.bz h3 em{font-style:normal;color:var(--soft);font-weight:600;font-size:13px;margin-left:auto}
+.bz .bq{color:var(--zc);font-size:13.5px;margin:0 0 12px}
+.bz .e{margin-bottom:10px}
+.bz .empty{padding:24px 8px;font-size:14px}
+.flow{position:sticky;top:57px;z-index:19;background:#0d1f1d;color:#fff}
+.flow-in{max-width:1180px;margin:0 auto;padding:8px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.flow-t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6}
+.steps{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.steps button{border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:9px;padding:6px 10px;font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}
+.steps button i{font-style:normal;opacity:.55;font-size:12px}
+.steps button.on{background:#fff;color:#0d1f1d}
+.timer{display:flex;gap:4px;align-items:center}
+.timer button{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:8px;padding:5px 9px;font-size:13px;font-weight:700}
+.timer b{cursor:pointer;font-variant-numeric:tabular-nums;font-size:18px;min-width:62px;text-align:center}
+.timer b.end{color:#fca5a5;animation:pop .6s 3}
+.stepnote{background:#0d1f1d;color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:18px;display:flex;gap:12px;align-items:flex-start;font-size:14.5px}
+.stepnote b{display:block;font-size:15.5px;margin-bottom:2px}
+
 /* Mobil */
 .bottom{display:none}
 @media (max-width:760px){
@@ -228,6 +260,9 @@ body:not(.retro) .ronly{display:none!important}
   .q{padding:20px 18px}
   .moods{gap:5px}.mood{font-size:12px;padding:10px 2px}
   .types{grid-template-columns:1fr}
+  .zones{grid-template-columns:1fr 1fr;gap:8px}.zone{padding:11px;gap:8px}.zone small{display:none}
+  .boat{grid-template-columns:1fr;padding:10px}.boat::before{display:none}
+  .flow{top:57px}.flow-in{padding:8px 12px}.steps button i{display:none}
   .stats{gap:8px}.stat{padding:12px;flex-direction:column;align-items:flex-start;gap:8px}
   .hbar{grid-template-columns:110px 1fr 30px}
   .bottom{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:30}
@@ -267,6 +302,7 @@ body:not(.retro) .ronly{display:none!important}
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
   <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
   <symbol id="i-play" viewBox="0 0 24 24"><path d="m6 3 14 9-14 9V3z"/></symbol>
 </svg>
 
@@ -283,21 +319,30 @@ body:not(.retro) .ronly{display:none!important}
   </div>
 </header>
 
+<div class="flow ronly" id="flow">
+  <div class="flow-in">
+    <span class="flow-t">Retro-Ablauf</span>
+    <div class="steps" id="steps"></div>
+    <div class="timer" id="timer">
+      <button data-min="3">3′</button><button data-min="8">8′</button><button data-min="10">10′</button>
+      <b id="clock">–:–</b><button id="tStop" aria-label="Timer stoppen">■</button>
+    </div>
+  </div>
+</div>
+
 <main>
+  <div class="stepnote ronly" id="stepnote" hidden></div>
   <!-- Rückmeldung -->
   <section data-pane="drop">
     <div class="narrow">
       <div class="hero">
         <h1>Was beschäftigt dich?</h1>
-        <p>Sag, was dich stört oder was gut läuft. In der Retro besprechen wir zuerst die Themen, denen die meisten zustimmen.</p>
+        <p>Wirf deinen Gedanken ins Segelboot: was uns antreibt, was uns bremst, was uns gefährlich werden kann und wo wir hinwollen. In der Retro besprechen wir zuerst, was die meisten bewegt.</p>
         <div class="note"><svg class="svg"><use href="#i-shield"/></svg><span>Komplett anonym. Es werden keine Namen, keine IP-Adressen und keine Cookies gespeichert. <a href="#" data-anon class="anon-link">Wie anonym ist das?</a></span></div>
       </div>
       <div class="card form">
-        <div class="lbl">Art der Rückmeldung</div>
-        <div class="toggle" id="kind">
-          <button data-kind="kummer" class="on"><svg class="svg"><use href="#i-frown"/></svg>Das stört mich</button>
-          <button data-kind="lob"><svg class="svg"><use href="#i-heart"/></svg>Das läuft gut</button>
-        </div>
+        <div class="lbl">Wohin gehört dein Gedanke?</div>
+        <div class="zones" id="kind"></div>
         <div class="lbl">Wie geht es dir mit dem Modul? <small>optional</small></div>
         <div class="moods" id="dropMood"></div>
         <div class="lbl">Thema</div>
@@ -308,7 +353,7 @@ body:not(.retro) .ronly{display:none!important}
         <textarea id="text" rows="4" maxlength="500" placeholder="Was stört dich, und warum?"></textarea>
         <div class="hint"><span>Bitte ohne Namen von anderen.</span><span id="len">0/500</span></div>
         <div id="betterWrap">
-          <div class="lbl">Was wäre besser? <small>optional</small></div>
+          <div class="lbl"><span id="betterLbl">Was wäre besser?</span> <small>optional</small></div>
           <textarea id="better" rows="2" maxlength="300" placeholder="Dein Vorschlag, falls du einen hast"></textarea>
         </div>
         <button class="primary" id="send" disabled>Anonym absenden <svg class="svg"><use href="#i-send"/></svg></button>
@@ -375,15 +420,18 @@ body:not(.retro) .ronly{display:none!important}
     <div class="card weather" id="weather"></div>
     <div class="bar">
       <div class="tabs" id="filter">
-        <button data-f="offen" class="on">Offen</button><button data-f="umgesetzt">Umgesetzt</button><button data-f="lob">Lob</button><button data-f="alle">Alle</button>
+        <button data-f="offen" class="on">Offen</button><button data-f="wind">💨 Läuft gut</button><button data-f="umgesetzt">Umgesetzt</button><button data-f="alle">Alle</button>
       </div>
+      <div class="tabs" id="layout"><button data-l="boat" class="on">⛵ Segelboot</button><button data-l="list">Liste</button></div>
       <div class="sel">
+        <button class="btn-o ronly" id="top3Btn"><svg class="svg"><use href="#i-copy"/></svg>Top 3 für Miro</button>
         <button class="btn-o ronly" id="presentBtn"><svg class="svg"><use href="#i-play"/></svg>Präsentieren</button>
         <select id="sort" aria-label="Sortierung"><option value="votes">Meiste Zustimmung</option><option value="new">Neueste zuerst</option></select>
         <select id="catFilter" aria-label="Thema"><option value="">Alle Themen</option></select>
       </div>
     </div>
     <div class="cards" id="cards"></div>
+    <div class="boat" id="boat" hidden></div>
   </section>
 
   <section data-pane="history" hidden>
@@ -461,21 +509,19 @@ body:not(.retro) .ronly{display:none!important}
     { k: "gefangener", e: "⛓️", n: "Gefangener", d: "Ich wäre lieber woanders.", c: "#c2410c" },
   ];
   const STATUS = { gehoert: ["Gehört", "ear"], besprochen: ["Wird besprochen", "chat"], umgesetzt: ["Umgesetzt", "check"] };
-  const PROMPTS = {
-    kummer: [
-      "Was hat dich in diesem Modul Zeit gekostet, die du lieber anders genutzt hättest?",
-      "Was würde einen neuen Teilnehmer an diesem Kurs am meisten stören?",
-      "Bei welcher Aufgabe wusstest du nicht genau, was von dir erwartet wird?",
-      "Welches Tool hat dich diese Woche am meisten genervt, und wobei?",
-      "Was hättest du gern vorher gewusst?",
-    ],
-    lob: [
-      "Was hat dir in diesem Modul richtig geholfen?",
-      "Welche Methode willst du unbedingt weiter nutzen?",
-      "Wer oder was hat dir den Tag leichter gemacht? (Bitte ohne Namen.)",
-      "Was sollen wir genau so beibehalten?",
-    ],
+  // Segelboot-Zonen
+  const ZONES = {
+    wind: { e: "💨", n: "Wind", q: "Was treibt uns an? Was läuft gut?", c: "#15803d", ph: "Was läuft gut, und warum?", better: "",
+      p: ["Was hat dir in diesem Modul richtig geholfen?", "Welche Methode willst du unbedingt weiter nutzen?", "Was sollen wir genau so beibehalten?", "Was hat dir den Tag leichter gemacht? (Bitte ohne Namen.)"] },
+    anker: { e: "⚓", n: "Anker", q: "Was bremst uns?", c: "#0369a1", ph: "Was bremst dich, und warum?", better: "Was wäre besser?",
+      p: ["Was hat dich in diesem Modul Zeit gekostet, die du lieber anders genutzt hättest?", "Bei welcher Aufgabe wusstest du nicht genau, was von dir erwartet wird?", "Welches Tool hat dich diese Woche am meisten genervt, und wobei?", "Was würde einen neuen Teilnehmer an diesem Kurs am meisten stören?"] },
+    felsen: { e: "🪨", n: "Felsen", q: "Welche Risiken sehen wir?", c: "#be123c", ph: "Was könnte uns gefährlich werden?", better: "Wie könnten wir vorbeugen?",
+      p: ["Was macht dir Sorgen mit Blick auf die Prüfungen?", "Was könnte im nächsten Modul schiefgehen?", "Wo siehst du die Gefahr, dass jemand abgehängt wird?"] },
+    insel: { e: "🏝️", n: "Insel", q: "Wo wollen wir am Kursende stehen?", c: "#b45309", ph: "Wo willst du hin?", better: "Was bräuchten wir dafür?",
+      p: ["Was willst du am Kursende sicher können?", "Wie soll sich die Gruppe in drei Monaten anfühlen?", "Worauf willst du am Ende stolz sein?"] },
   };
+  const ZONE_ORDER = ["wind", "insel", "anker", "felsen"];
+  const zoneTag = k => { const z = ZONES[k] || ZONES.anker; return `<span class="ztag" style="--zc:${z.c}">${z.e} ${z.n}</span>`; };
 
   // Geräte-Kennung: zufällig, bleibt nur auf diesem Gerät. Der Server speichert nur einen Hash davon.
   let device = "";
@@ -487,7 +533,7 @@ body:not(.retro) .ronly{display:none!important}
   let retroPw = "";
   try { retroPw = sessionStorage.getItem("kk-retro") || ""; } catch {}
 
-  const state = { kind: "kummer", mood: null, cat: null, prompt: 0, entries: [], moods: {}, filter: "offen", sort: "votes", catF: "",
+  const state = { kind: "anker", layout: "boat", mood: null, cat: null, prompt: 0, entries: [], moods: {}, filter: "offen", sort: "votes", catF: "",
     check: { mood: null, type: null }, survey: null };
 
   async function api(path, opt = {}) {
@@ -523,11 +569,13 @@ body:not(.retro) .ronly{display:none!important}
     $("#dropMood").innerHTML = moodHTML(state.mood, "dmood");
     $("#cats").innerHTML = Object.entries(CATS).map(([k, n]) =>
       `<button class="chip${state.cat === k ? " on" : ""}" style="color:var(--${k})" data-cat="${k}"><i class="dot"></i><span>${n}</span></button>`).join("");
-    $$("#kind button").forEach(b => b.classList.toggle("on", b.dataset.kind === state.kind));
-    const list = PROMPTS[state.kind];
-    $("#promptText").textContent = list[state.prompt % list.length];
-    $("#betterWrap").hidden = state.kind === "lob";
-    $("#text").placeholder = state.kind === "lob" ? "Was läuft gut, und warum?" : "Was stört dich, und warum?";
+    $("#kind").innerHTML = ["wind", "anker", "felsen", "insel"].map(k => { const z = ZONES[k];
+      return `<button class="zone${state.kind === k ? " on" : ""}" style="--zc:${z.c}" data-kind="${k}" aria-pressed="${state.kind === k}"><span class="em">${z.e}</span><span><b>${z.n}</b><small>${z.q}</small></span></button>`; }).join("");
+    const z = ZONES[state.kind];
+    $("#promptText").textContent = z.p[state.prompt % z.p.length];
+    $("#betterWrap").hidden = !z.better;
+    $("#betterLbl").textContent = z.better || "";
+    $("#text").placeholder = z.ph;
     checkSend();
   }
   function checkSend() {
@@ -567,9 +615,9 @@ body:not(.retro) .ronly{display:none!important}
   const sorted = (list, how) => [...list].sort((a, b) => how === "new" ? b.created - a.created : (b.votes - a.votes) || (b.created - a.created));
   function filtered() {
     let l = state.entries;
-    if (state.filter === "offen") l = l.filter(e => e.kind === "kummer" && e.status !== "umgesetzt");
+    if (state.filter === "offen") l = l.filter(e => e.kind !== "wind" && e.status !== "umgesetzt");
+    if (state.filter === "wind") l = l.filter(e => e.kind === "wind");
     if (state.filter === "umgesetzt") l = l.filter(e => e.status === "umgesetzt");
-    if (state.filter === "lob") l = l.filter(e => e.kind === "lob");
     if (state.catF) l = l.filter(e => e.category === state.catF);
     return sorted(l, state.sort);
   }
@@ -582,7 +630,7 @@ body:not(.retro) .ronly{display:none!important}
     const st = STATUS[e.status];
     const retro = document.body.classList.contains("retro");
     return `<article class="card e${e.hidden ? " hid" : ""}" style="--c:var(--${e.category})">
-      <div class="e-top"><span class="tag">${e.kind === "lob" ? "♥ Lob · " : ""}${CATS[e.category] || "Sonstiges"}</span>
+      <div class="e-top"><span class="tags">${zoneTag(e.kind)}<span class="tag">${CATS[e.category] || "Sonstiges"}</span></span>
         ${st ? `<span class="st ${e.status}">${icon(st[1])}${st[0]}</span>` : ""}</div>
       <p>${esc(e.text)}</p>
       ${e.better ? `<div class="box v"><small>Vorschlag</small>${esc(e.better)}</div>` : ""}
@@ -613,6 +661,15 @@ body:not(.retro) .ronly{display:none!important}
     $("#weather").innerHTML = `<div class="weather-top"><b>Stimmung im Kurs</b><span>${w.total ? w.total + " Stimmen · " : ""}letzte 3 Wochen</span></div>
       <div class="wbar">${w.bar}</div><div class="wlegend">${w.legend}</div>`;
     const list = filtered();
+    const boat = state.layout === "boat";
+    $("#cards").hidden = boat; $("#boat").hidden = !boat;
+    $$("#layout button").forEach(b => b.classList.toggle("on", b.dataset.l === state.layout));
+    if (boat) {
+      const boatList = state.filter === "offen" ? sorted(state.entries.filter(e => e.status !== "umgesetzt" && (!state.catF || e.category === state.catF)), state.sort) : list;
+      $("#boat").innerHTML = ZONE_ORDER.map(k => { const z = ZONES[k]; const items = boatList.filter(e => e.kind === k);
+        return `<div class="bz" style="--zc:${z.c}"><h3><span>${z.e} ${z.n.toUpperCase()}</span><em>${items.length}</em></h3><p class="bq">${z.q}</p>${
+          items.length ? items.map(cardHTML).join("") : `<div class="empty">Noch nichts hier.</div>`}</div>`; }).join("");
+    }
     $("#cards").innerHTML = list.length ? list.map(cardHTML).join("") :
       `<div class="empty" style="column-span:all"><div class="big">${state.filter === "umgesetzt" ? "🌱" : "📭"}</div>${
         state.filter === "umgesetzt" ? "Noch nichts umgesetzt. Das ändert sich nach der Retro." :
@@ -620,6 +677,14 @@ body:not(.retro) .ronly{display:none!important}
   }
   $("#catFilter").innerHTML += Object.entries(CATS).map(([k, n]) => `<option value="${k}">${n}</option>`).join("");
   $("#filter").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (!b) return; state.filter = b.dataset.f; $$("#filter button").forEach(x => x.classList.toggle("on", x === b)); renderBoard(); });
+  $("#layout").addEventListener("click", e => { const b = e.target.closest("[data-l]"); if (!b) return; state.layout = b.dataset.l; renderBoard(); });
+  $("#top3Btn").addEventListener("click", async () => {
+    const top = sorted(state.entries.filter(e => !e.hidden && (e.kind === "anker" || e.kind === "felsen") && e.status !== "umgesetzt"), "votes").slice(0, 3);
+    if (!top.length) { toast("Noch keine offenen Themen.", true); return; }
+    const txt = top.map(e => `${e.text}${e.better ? " (Vorschlag: " + e.better + ")" : ""}`).join("\n");
+    try { await navigator.clipboard.writeText(txt); toast("Top 3 kopiert. Jetzt in Miro einfügen."); }
+    catch { prompt("Kopieren, dann in Miro einfügen:", txt.replace(/\n/g, " | ")); }
+  });
   $("#sort").addEventListener("change", e => { state.sort = e.target.value; renderBoard(); });
   $("#catFilter").addEventListener("change", e => { state.catF = e.target.value; renderBoard(); });
 
@@ -710,10 +775,10 @@ body:not(.retro) .ronly{display:none!important}
         `<div class="hbar"><span style="display:flex;gap:7px;align-items:center">${icon(m.i, "color:" + m.c)}${m.n}</span><span class="tr"><i style="width:${(r.moods[m.v] || 0) / mm * 100}%;background:${m.c}"></i></span><b>${r.moods[m.v] || 0}</b></div>`).join("")}</div>
       <div class="card res"><h3>Welcher Typ seid ihr gerade?</h3>${TYPES.map(t =>
         `<div class="hbar"><span>${t.e} ${t.n}</span><span class="tr"><i style="width:${(r.types[t.k] || 0) / tm * 100}%;background:${t.c}"></i></span><b>${r.types[t.k] || 0}</b></div>`).join("")}</div>
-      ${block("Was hat am meisten Nerven gekostet?", "nerven", "kummer")}
-      ${block("Was lief gut und soll bleiben?", "gut", "lob")}
-      ${block("Was würdet ihr sofort ändern?", "aendern", "kummer")}
-      ${block("Was müsste passieren, damit ihr gern mitredet?", "mitreden", "kummer")}`
+      ${block("Was hat am meisten Nerven gekostet?", "nerven", "anker")}
+      ${block("Was lief gut und soll bleiben?", "gut", "wind")}
+      ${block("Was würdet ihr sofort ändern?", "aendern", "anker")}
+      ${block("Was müsste passieren, damit ihr gern mitredet?", "mitreden", "anker")}`
       : `<div class="card empty"><div class="big">🗳️</div>Noch keine Antworten in dieser Runde.</div>`;
   }
   $("#roundToggle").addEventListener("click", async () => {
@@ -815,7 +880,7 @@ body:not(.retro) .ronly{display:none!important}
     const open = [];
     rounds.forEach(r => r.actions.forEach(a => { if (a.status === "offen" || a.status === "laeuft") open.push([a, r.label]); }));
     $("#openActs").innerHTML = open.length ? open.map(([a, l]) => actHTML(a, l)).join("") : `<p class="mini" style="margin:0">Keine offenen Maßnahmen. 🎉</p>`;
-    const top = sorted(state.entries.filter(e => !e.hidden && e.kind === "kummer" && e.status !== "umgesetzt"), "votes").slice(0, 5);
+    const top = sorted(state.entries.filter(e => !e.hidden && (e.kind === "anker" || e.kind === "felsen") && e.status !== "umgesetzt"), "votes").slice(0, 5);
     $("#topThemes").innerHTML = top.length ? top.map(e => `<div class="theme"><span>${esc(e.text)}</span><b>👍 ${e.votes}</b></div>`).join("") : `<p class="mini" style="margin:0">Noch keine Themen auf der Pinnwand.</p>`;
     const withData = rounds.filter(r => r.moods && r.total);
     $("#trendCard").hidden = !withData.length;
@@ -867,6 +932,52 @@ body:not(.retro) .ronly{display:none!important}
   document.addEventListener("click", e => { if (e.target.closest("[data-anon]")) { e.preventDefault(); $("#anonModal").classList.add("on"); } });
   $("#anonClose").addEventListener("click", () => $("#anonModal").classList.remove("on"));
   $("#anonModal").addEventListener("click", e => { if (e.target.id === "anonModal") $("#anonModal").classList.remove("on"); });
+
+  /* ---------- Retro-Ablauf ---------- */
+  const STEPS = [
+    { n: "Ankommen", m: "10", v: "check", t: "So geht's uns", d: "Ergebnisse vom Retro-Check zeigen: Stimmung und Typen. Niemand muss etwas sagen." },
+    { n: "Rückblick", m: "5", v: "history", t: "Was wurde aus der letzten Retro?", d: "Offene Maßnahmen durchgehen und den Status setzen: erledigt, läuft oder verworfen." },
+    { n: "Sammeln", m: "20", v: "drop", t: "Still schreiben", d: "Timer auf 8 Minuten. Jeder wirft Gedanken in die passende Zone, ein Gedanke pro Zettel, keine Namen.", timer: 8 },
+    { n: "Gewichten", m: "7", v: "board", layout: "boat", t: "Abstimmen", d: "Alle gehen das Segelboot durch und klicken bei allem, was sie auch so sehen, auf „Geht mir auch so“." },
+    { n: "Kleingruppen", m: "23", v: "board", layout: "list", filter: "offen", t: "Top 3 in Gruppen", d: "Die drei Anker und Felsen mit den meisten Stimmen sind eure Top 3. „Top 3 für Miro“ kopieren, Gruppen bilden, in Miro die Einflusskreise füllen.", timer: 10 },
+    { n: "Maßnahmen", m: "12", v: "history", t: "Was machen wir konkret?", d: "Pro Gruppe höchstens eine Maßnahme aus dem inneren Kreis eintragen, mit Pate und Frist." },
+    { n: "Abschluss", m: "8", v: "check", t: "Danke und Ausblick", d: "Danke-Runde im Chat. Fragerunde schließen; vor der nächsten Retro startet ihr hier eine neue Runde." },
+  ];
+  let step = -1;
+  function renderSteps() {
+    $("#steps").innerHTML = STEPS.map((x, i) => `<button class="${i === step ? "on" : ""}" data-step="${i}">${i + 1} ${x.n} <i>${x.m}′</i></button>`).join("");
+    const note = $("#stepnote");
+    if (step < 0) { note.hidden = true; return; }
+    const x = STEPS[step]; note.hidden = false;
+    note.innerHTML = `<span style="font-size:22px">${step + 1}</span><div><b>${x.t}</b>${x.d}</div>`;
+  }
+  $("#steps").addEventListener("click", e => {
+    const b = e.target.closest("[data-step]"); if (!b) return;
+    step = +b.dataset.step; const x = STEPS[step];
+    if (x.layout) state.layout = x.layout;
+    if (x.filter) { state.filter = x.filter; $$("#filter button").forEach(y => y.classList.toggle("on", y.dataset.f === x.filter)); }
+    show(x.v); renderSteps();
+    if (x.timer) startTimer(x.timer, false);
+  });
+  let tEnd = 0, tInt = null;
+  function tick() {
+    const left = Math.max(0, Math.round((tEnd - Date.now()) / 1000));
+    $("#clock").textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, "0")}`;
+    $("#clock").classList.toggle("end", left === 0);
+    if (!left) { clearInterval(tInt); tInt = null; }
+  }
+  function startTimer(min, run = true) {
+    clearInterval(tInt); tEnd = Date.now() + min * 60000;
+    if (run) { tInt = setInterval(tick, 500); tick(); }
+    else { $("#clock").textContent = `${min}:00`; $("#clock").classList.remove("end"); $("#clock").dataset.ready = min; }
+  }
+  $("#timer").addEventListener("click", e => {
+    const m = e.target.closest("[data-min]");
+    if (m) { startTimer(+m.dataset.min); return; }
+    if (e.target.id === "tStop") { clearInterval(tInt); tInt = null; $("#clock").textContent = "–:–"; $("#clock").classList.remove("end"); return; }
+    if (e.target.id === "clock" && $("#clock").dataset.ready && !tInt) { startTimer(+$("#clock").dataset.ready); delete $("#clock").dataset.ready; }
+  });
+  renderSteps();
 
   /* ---------- Start ---------- */
   renderDrop(); renderCheck();
