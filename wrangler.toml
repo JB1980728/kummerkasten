@@ -8,9 +8,8 @@ type = "Text"
 globs = ["**/*.html"]
 fallthrough = true
 
-[vars]
-# SHA-256 von "kk-pass:" + Retro-Passwort. Passwort ändern: neuen Hash eintragen.
-PASS_HASH = "c22532b7cf165ed3180ceab3847ee6bc1e35819825320530241afda0ccd85349"
+# Das Retro-Passwort liegt NICHT im Code, sondern als verschlüsselte Variable PASS_HASH
+# (SHA-256 von "kk-pass:" + Passwort) in den Cloudflare-Einstellungen des Workers.
 
 [[d1_databases]]
 binding = "DB"
