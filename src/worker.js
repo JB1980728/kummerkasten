@@ -1,4 +1,4 @@
-// Kummerkasten – Cloudflare Worker + D1
+// Logbuch (früher Kummerkasten) – Cloudflare Worker + D1
 // Anonym: keine Namen, keine IP-Adressen, keine Cookies. Geräte werden nur als
 // gesalzener Hash erkannt, damit man nicht doppelt zustimmt oder doppelt an der Fragerunde teilnimmt.
 // Fragerunden-Antworten werden OHNE Geräte-Bezug gespeichert.
