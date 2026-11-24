@@ -5,7 +5,8 @@
 import HTML from "./index.html";
 
 // Segelboot-Zonen: wind = läuft gut, anker = bremst, felsen = Risiko, insel = Ziel
-const KINDS = ["wind", "anker", "felsen", "insel"];
+const KINDS = ["wind", "anker", "felsen", "insel", "danke", "aha"];
+const NO_BETTER = ["wind", "danke", "aha"];
 const LEGACY = { kummer: "anker", lob: "wind" };
 const CATEGORIES = ["inhalt", "tempo", "organisation", "tools", "miteinander", "sonstiges"];
 const STATUSES = ["neu", "gehoert", "besprochen", "umgesetzt"];
@@ -165,7 +166,7 @@ async function handleApi(request, env, url) {
     const category = CATEGORIES.includes(body.category) ? body.category : "sonstiges";
     const mood = Number.isInteger(body.mood) && body.mood >= 1 && body.mood <= 5 ? body.mood : null;
     const text = clean(body.text, 500);
-    const better = kind === "wind" ? "" : clean(body.better, 300);
+    const better = NO_BETTER.includes(kind) ? "" : clean(body.better, 300);
     if (!text && !mood) return json({ error: "Schreib etwas oder wähl eine Stimmung." }, 400);
     for (const t of [text, better]) {
       if (!t) continue;

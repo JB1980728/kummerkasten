@@ -190,7 +190,7 @@ body:not(.retro) .ronly{display:none!important}
 .anon-grid div:last-child{background:var(--teal-l)}
 .anon-grid ul{margin:6px 0 0;padding-left:18px}
 .anon p{color:var(--ink)!important;font-size:14px}
-.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.hgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 .hgrid .res{margin-bottom:0}
 .mini{margin:-8px 0 12px;color:var(--soft);font-size:13px}
 .act{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}
@@ -249,6 +249,22 @@ body:not(.retro) .ronly{display:none!important}
 .stepnote{background:#0d1f1d;color:#fff;border-radius:16px;padding:14px 18px;margin-bottom:18px;display:flex;gap:12px;align-items:flex-start;font-size:14.5px}
 .stepnote b{display:block;font-size:15.5px;margin-bottom:2px}
 
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#eceeee;border-radius:13px;padding:4px;margin-bottom:22px}
+.modes button{border:0;background:none;padding:10px 6px;border-radius:10px;font-weight:600;font-size:14px;color:var(--muted)}
+.modes button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.wins{background:linear-gradient(135deg,#ecfdf5,#fef9c3);border:1px solid #bbf7d0;border-radius:18px;padding:16px 20px;margin-bottom:14px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.wins .big{font-size:34px;font-weight:800;color:#15803d;line-height:1}
+.wins b{display:block;font-size:15.5px}
+.wins ul{margin:4px 0 0;padding-left:18px;font-size:14px;color:var(--muted)}
+.tail{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.tail .res{margin:0}
+.pos{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:#fffbeb;margin-bottom:8px;font-size:14.5px}
+.pos.aha{background:#eff6ff}
+.pos span{white-space:pre-wrap;word-wrap:break-word}
+.heart{border:1px solid var(--line2);background:#fff;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:700;white-space:nowrap}
+.heart.on{background:#fee2e2;border-color:#fca5a5;color:#b91c1c}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:80}
+
 /* Mobil */
 .bottom{display:none}
 @media (max-width:760px){
@@ -270,7 +286,8 @@ body:not(.retro) .ronly{display:none!important}
   .bottom button.on{color:var(--teal)}
   .bottom .svg{width:22px;height:22px}
   .bottom .badge{position:absolute;top:-4px;left:calc(50% + 6px)}
-  .hgrid,.anon-grid{grid-template-columns:1fr}
+  .hgrid,.anon-grid,.tail{grid-template-columns:1fr}
+  .modes button{font-size:12.5px;padding:9px 2px}
   .trow{grid-template-columns:96px 1fr 44px}
   .addact{grid-template-columns:1fr 1fr}
   .addact input:first-child{grid-column:1/-1}
@@ -341,17 +358,24 @@ body:not(.retro) .ronly{display:none!important}
         <div class="note"><svg class="svg"><use href="#i-shield"/></svg><span>Komplett anonym. Es werden keine Namen, keine IP-Adressen und keine Cookies gespeichert. <a href="#" data-anon class="anon-link">Wie anonym ist das?</a></span></div>
       </div>
       <div class="card form">
-        <div class="lbl">Wohin gehört dein Gedanke?</div>
-        <div class="zones" id="kind"></div>
-        <div class="lbl">Wie geht es dir mit dem Modul? <small>optional</small></div>
-        <div class="moods" id="dropMood"></div>
-        <div class="lbl">Thema</div>
-        <div class="chips" id="cats"></div>
-        <div class="lbl">Deine Rückmeldung</div>
+        <div class="modes" id="mode">
+          <button data-mode="boat" class="on">⛵ Ins Segelboot</button>
+          <button data-mode="danke">💛 Danke sagen</button>
+          <button data-mode="aha">💡 Aha-Moment</button>
+        </div>
+        <div data-only="boat">
+          <div class="lbl">Wohin gehört dein Gedanke?</div>
+          <div class="zones" id="kind"></div>
+          <div class="lbl">Wie geht es dir mit dem Modul? <small>optional</small></div>
+          <div class="moods" id="dropMood"></div>
+          <div class="lbl">Thema</div>
+          <div class="chips" id="cats"></div>
+        </div>
+        <div class="lbl" id="textLbl">Deine Rückmeldung</div>
         <div class="prompt"><div><small>Falls dir der Einstieg schwerfällt:</small><b id="promptText"></b></div>
           <button class="icon-btn" id="nextPrompt" aria-label="Andere Frage"><svg class="svg"><use href="#i-refresh"/></svg></button></div>
         <textarea id="text" rows="4" maxlength="500" placeholder="Was stört dich, und warum?"></textarea>
-        <div class="hint"><span>Bitte ohne Namen von anderen.</span><span id="len">0/500</span></div>
+        <div class="hint"><span id="nameHint">Bitte ohne Namen von anderen.</span><span id="len">0/500</span></div>
         <div id="betterWrap">
           <div class="lbl"><span id="betterLbl">Was wäre besser?</span> <small>optional</small></div>
           <textarea id="better" rows="2" maxlength="300" placeholder="Dein Vorschlag, falls du einen hast"></textarea>
@@ -412,6 +436,11 @@ body:not(.retro) .ronly{display:none!important}
       <h1 style="font-size:32px">Pinnwand</h1>
       <p>Alle Rückmeldungen aus dem Kurs. Stimm zu, wenn es dir genauso geht.</p>
     </div>
+    <div class="wins" data-wins hidden></div>
+    <div class="tail">
+      <div class="card res"><h3>💛 Danke-Wand</h3><div id="danke"></div></div>
+      <div class="card res"><h3>💡 Aha-Momente</h3><div id="aha"></div></div>
+    </div>
     <div class="stats">
       <div class="card stat"><span class="ic" style="background:#e8f0fe;color:#2563eb"><svg class="svg"><use href="#i-inbox"/></svg></span><div><b id="sEntries">0</b><small>Einträge</small></div></div>
       <div class="card stat"><span class="ic" style="background:#fdf0e4;color:#b4530a"><svg class="svg"><use href="#i-thumb"/></svg></span><div><b id="sVotes">0</b><small>Zustimmungen</small></div></div>
@@ -439,7 +468,9 @@ body:not(.retro) .ronly{display:none!important}
       <h1 style="font-size:32px">Verlauf</h1>
       <p>Was wir in den Retros beschlossen haben, was daraus geworden ist und wie sich die Stimmung entwickelt. Für alle im Kurs und für den Dozenten.</p>
     </div>
+    <div class="wins" data-wins hidden></div>
     <div class="hgrid">
+      <div class="card res"><h3>💨 Was gut läuft</h3><p class="mini">Die meisten Zustimmungen im Wind</p><div id="topWind"></div></div>
       <div class="card res"><h3>Offene Maßnahmen</h3><div id="openActs"></div></div>
       <div class="card res"><h3>Größte offene Themen</h3><p class="mini">Nach Zustimmung auf der Pinnwand</p><div id="topThemes"></div></div>
     </div>
@@ -521,7 +552,15 @@ body:not(.retro) .ronly{display:none!important}
       p: ["Was willst du am Kursende sicher können?", "Wie soll sich die Gruppe in drei Monaten anfühlen?", "Worauf willst du am Ende stolz sein?"] },
   };
   const ZONE_ORDER = ["wind", "insel", "anker", "felsen"];
-  const zoneTag = k => { const z = ZONES[k] || ZONES.anker; return `<span class="ztag" style="--zc:${z.c}">${z.e} ${z.n}</span>`; };
+  const EXTRA = { danke: { e: "💛", n: "Danke", c: "#b45309" }, aha: { e: "💡", n: "Aha-Moment", c: "#2563eb" } };
+  const POSITIVE = ["danke", "aha"];
+  const MODES = {
+    danke: { lbl: "Wem oder wofür möchtest du danken?", ph: "Danke an … für …", hint: "Vornamen sind hier erlaubt.", send: "Danke absenden",
+      p: ["Wer hat dir diese Woche weitergeholfen?", "Welche Gruppenarbeit lief richtig gut, und warum?", "Wofür bist du im Kurs gerade dankbar?"] },
+    aha: { lbl: "Was hast du gelernt?", ph: "Mein Aha-Moment war …", hint: "Bitte ohne Namen von anderen.", send: "Aha-Moment teilen",
+      p: ["Welche Methode hat bei dir „Klick“ gemacht?", "Was weißt du jetzt, was du vor einer Woche noch nicht wusstest?", "Was nimmst du aus dem letzten Modul für den Job mit?"] },
+  };
+  const zoneTag = k => { const z = ZONES[k] || EXTRA[k] || ZONES.anker; return `<span class="ztag" style="--zc:${z.c}">${z.e} ${z.n}</span>`; };
 
   // Geräte-Kennung: zufällig, bleibt nur auf diesem Gerät. Der Server speichert nur einen Hash davon.
   let device = "";
@@ -533,7 +572,7 @@ body:not(.retro) .ronly{display:none!important}
   let retroPw = "";
   try { retroPw = sessionStorage.getItem("kk-retro") || ""; } catch {}
 
-  const state = { kind: "anker", layout: "boat", mood: null, cat: null, prompt: 0, entries: [], moods: {}, filter: "offen", sort: "votes", catF: "",
+  const state = { mode: "boat", kind: "wind", layout: "boat", mood: null, cat: null, prompt: 0, entries: [], moods: {}, filter: "offen", sort: "votes", catF: "",
     check: { mood: null, type: null }, survey: null };
 
   async function api(path, opt = {}) {
@@ -571,20 +610,27 @@ body:not(.retro) .ronly{display:none!important}
       `<button class="chip${state.cat === k ? " on" : ""}" style="color:var(--${k})" data-cat="${k}"><i class="dot"></i><span>${n}</span></button>`).join("");
     $("#kind").innerHTML = ["wind", "anker", "felsen", "insel"].map(k => { const z = ZONES[k];
       return `<button class="zone${state.kind === k ? " on" : ""}" style="--zc:${z.c}" data-kind="${k}" aria-pressed="${state.kind === k}"><span class="em">${z.e}</span><span><b>${z.n}</b><small>${z.q}</small></span></button>`; }).join("");
-    const z = ZONES[state.kind];
+    const boat = state.mode === "boat";
+    $$("#mode button").forEach(b => b.classList.toggle("on", b.dataset.mode === state.mode));
+    $$("[data-only=boat]").forEach(x => x.hidden = !boat);
+    const z = boat ? ZONES[state.kind] : MODES[state.mode];
     $("#promptText").textContent = z.p[state.prompt % z.p.length];
-    $("#betterWrap").hidden = !z.better;
-    $("#betterLbl").textContent = z.better || "";
+    $("#betterWrap").hidden = !boat || !z.better;
+    $("#betterLbl").textContent = (boat && z.better) || "";
     $("#text").placeholder = z.ph;
+    $("#textLbl").textContent = boat ? "Deine Rückmeldung" : z.lbl;
+    $("#nameHint").textContent = boat ? "Bitte ohne Namen von anderen." : z.hint;
+    $("#send").innerHTML = `${boat ? "Anonym absenden" : z.send} ${icon("send")}`;
     checkSend();
   }
   function checkSend() {
     const t = $("#text").value.trim();
     $("#len").textContent = `${$("#text").value.length}/500`;
-    const ok = t.length >= 4 || (state.mood && !t);
+    const ok = t.length >= 4 || (state.mode === "boat" && state.mood && !t);
     $("#send").disabled = !ok;
-    $("#sendHint").textContent = t && t.length < 4 ? "Etwas mehr Text, bitte." : t && !state.cat ? "Tipp: Wähl noch ein Thema, dann lässt es sich besser sortieren." : "Schreib etwas oder wähl eine Stimmung.";
+    $("#sendHint").textContent = t && t.length < 4 ? "Etwas mehr Text, bitte." : state.mode !== "boat" ? "Ein paar Worte reichen." : t && !state.cat ? "Tipp: Wähl noch ein Thema, dann lässt es sich besser sortieren." : "Schreib etwas oder wähl eine Stimmung.";
   }
+  $("#mode").addEventListener("click", e => { const b = e.target.closest("[data-mode]"); if (!b) return; state.mode = b.dataset.mode; state.prompt = 0; renderDrop(); });
   $("#kind").addEventListener("click", e => { const b = e.target.closest("[data-kind]"); if (!b) return; state.kind = b.dataset.kind; state.prompt = 0; renderDrop(); });
   $("#dropMood").addEventListener("click", e => { const b = e.target.closest("[data-dmood]"); if (!b) return; const v = +b.dataset.dmood; state.mood = state.mood === v ? null : v; renderDrop(); });
   $("#cats").addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (!b) return; state.cat = state.cat === b.dataset.cat ? null : b.dataset.cat; renderDrop(); });
@@ -593,12 +639,15 @@ body:not(.retro) .ronly{display:none!important}
   $("#send").addEventListener("click", async () => {
     const btn = $("#send"); btn.disabled = true;
     try {
+      const boat = state.mode === "boat";
       const r = await api("/api/entries", { method: "POST", body: JSON.stringify({
-        kind: state.kind, category: state.cat || "sonstiges", mood: state.mood,
-        text: $("#text").value, better: $("#better").value }) });
+        kind: boat ? state.kind : state.mode, category: boat ? (state.cat || "sonstiges") : (state.mode === "danke" ? "miteinander" : "inhalt"),
+        mood: boat ? state.mood : null, text: $("#text").value, better: boat ? $("#better").value : "" }) });
       $("#text").value = ""; $("#better").value = ""; state.mood = null; state.cat = null;
       renderDrop();
-      toast(r.entry ? "Danke! Deine Rückmeldung hängt jetzt anonym an der Pinnwand." : "Danke! Deine Stimmung ist gezählt.");
+      if (!boat) confetti();
+      toast(!boat ? (state.mode === "danke" ? "Danke ist angekommen! Es hängt jetzt an der Danke-Wand. 💛" : "Danke fürs Teilen! 💡")
+        : r.entry ? "Danke! Deine Rückmeldung hängt jetzt anonym an der Pinnwand." : "Danke! Deine Stimmung ist gezählt.");
       load();
     } catch (err) { toast(err.message, true); checkSend(); }
   });
@@ -606,15 +655,16 @@ body:not(.retro) .ronly{display:none!important}
   /* ---------- Pinnwand ---------- */
   async function load() {
     try {
-      const d = await api("/api/entries");
+      const [d, h] = await Promise.all([api("/api/entries"), api("/api/history").catch(() => null)]);
       state.entries = d.entries; state.moods = d.moods;
+      if (h) state.history = h.rounds;
       if (retroPw && !d.retro) setRetro(false);
       renderBoard();
     } catch (err) { /* still */ }
   }
   const sorted = (list, how) => [...list].sort((a, b) => how === "new" ? b.created - a.created : (b.votes - a.votes) || (b.created - a.created));
   function filtered() {
-    let l = state.entries;
+    let l = state.entries.filter(e => !POSITIVE.includes(e.kind));
     if (state.filter === "offen") l = l.filter(e => e.kind !== "wind" && e.status !== "umgesetzt");
     if (state.filter === "wind") l = l.filter(e => e.kind === "wind");
     if (state.filter === "umgesetzt") l = l.filter(e => e.status === "umgesetzt");
@@ -657,6 +707,12 @@ body:not(.retro) .ronly{display:none!important}
     $("#sEntries").textContent = vis.length;
     $("#sVotes").textContent = vis.reduce((s, e) => s + e.votes, 0);
     $("#sDone").textContent = vis.filter(e => e.status === "umgesetzt").length;
+    const posHTML = (k, cls) => { const items = sorted(vis.filter(e => e.kind === k), "new").slice(0, 8);
+      return items.length ? items.map(e => `<div class="pos ${cls}"><span>${esc(e.text)}</span><button class="heart${e.mine ? " on" : ""}" data-vote="${e.id}" aria-pressed="${e.mine}">❤️ ${e.votes}</button></div>`).join("")
+        : `<p class="mini" style="margin:0">${k === "danke" ? "Noch kein Danke. Sei der Erste unter „Rückmeldung geben“ → 💛 Danke sagen." : "Noch kein Aha-Moment. Was hast du diese Woche gelernt?"}</p>`; };
+    $("#danke").innerHTML = posHTML("danke", "");
+    $("#aha").innerHTML = posHTML("aha", "aha");
+    renderWins();
     const w = weatherHTML();
     $("#weather").innerHTML = `<div class="weather-top"><b>Stimmung im Kurs</b><span>${w.total ? w.total + " Stimmen · " : ""}letzte 3 Wochen</span></div>
       <div class="wbar">${w.bar}</div><div class="wlegend">${w.legend}</div>`;
@@ -665,7 +721,7 @@ body:not(.retro) .ronly{display:none!important}
     $("#cards").hidden = boat; $("#boat").hidden = !boat;
     $$("#layout button").forEach(b => b.classList.toggle("on", b.dataset.l === state.layout));
     if (boat) {
-      const boatList = state.filter === "offen" ? sorted(state.entries.filter(e => e.status !== "umgesetzt" && (!state.catF || e.category === state.catF)), state.sort) : list;
+      const boatList = state.filter === "offen" ? sorted(state.entries.filter(e => !POSITIVE.includes(e.kind) && e.status !== "umgesetzt" && (!state.catF || e.category === state.catF)), state.sort) : list;
       $("#boat").innerHTML = ZONE_ORDER.map(k => { const z = ZONES[k]; const items = boatList.filter(e => e.kind === k);
         return `<div class="bz" style="--zc:${z.c}"><h3><span>${z.e} ${z.n.toUpperCase()}</span><em>${items.length}</em></h3><p class="bq">${z.q}</p>${
           items.length ? items.map(cardHTML).join("") : `<div class="empty">Noch nichts hier.</div>`}</div>`; }).join("");
@@ -710,7 +766,7 @@ body:not(.retro) .ronly{display:none!important}
       return;
     }
     const s = e.target.closest("[data-set]");
-    if (s) { await patch(+s.dataset.id, { status: s.dataset.set }); return; }
+    if (s) { await patch(+s.dataset.id, { status: s.dataset.set }); if (s.dataset.set === "umgesetzt") confetti(); return; }
     const h = e.target.closest("[data-hide]");
     if (h) { const en = state.entries.find(x => x.id === +h.dataset.hide); await patch(en.id, { hidden: !en.hidden }); return; }
     const p = e.target.closest("[data-pin]");
@@ -881,6 +937,9 @@ body:not(.retro) .ronly{display:none!important}
     rounds.forEach(r => r.actions.forEach(a => { if (a.status === "offen" || a.status === "laeuft") open.push([a, r.label]); }));
     $("#openActs").innerHTML = open.length ? open.map(([a, l]) => actHTML(a, l)).join("") : `<p class="mini" style="margin:0">Keine offenen Maßnahmen. 🎉</p>`;
     const top = sorted(state.entries.filter(e => !e.hidden && (e.kind === "anker" || e.kind === "felsen") && e.status !== "umgesetzt"), "votes").slice(0, 5);
+    const wind = sorted(state.entries.filter(e => !e.hidden && e.kind === "wind"), "votes").slice(0, 3);
+    $("#topWind").innerHTML = wind.length ? wind.map(e => `<div class="theme"><span>${esc(e.text)}</span><b>👍 ${e.votes}</b></div>`).join("") : `<p class="mini" style="margin:0">Noch nichts im Wind.</p>`;
+    renderWins();
     $("#topThemes").innerHTML = top.length ? top.map(e => `<div class="theme"><span>${esc(e.text)}</span><b>👍 ${e.votes}</b></div>`).join("") : `<p class="mini" style="margin:0">Noch keine Themen auf der Pinnwand.</p>`;
     const withData = rounds.filter(r => r.moods && r.total);
     $("#trendCard").hidden = !withData.length;
@@ -911,7 +970,7 @@ body:not(.retro) .ronly{display:none!important}
     const n = e.target.closest("[data-anote]");
     const d = e.target.closest("[data-adel]");
     try {
-      if (s) { await api(`/api/actions/${s.dataset.aid}`, { method: "PATCH", body: JSON.stringify({ status: s.dataset.aset }) }); loadHistory(); }
+      if (s) { await api(`/api/actions/${s.dataset.aid}`, { method: "PATCH", body: JSON.stringify({ status: s.dataset.aset }) }); if (s.dataset.aset === "erledigt") confetti(); loadHistory(); }
       if (n) {
         const a = (state.history || []).flatMap(r => r.actions).find(x => x.id === +n.dataset.anote);
         const note = prompt("Notiz zur Maßnahme (z. B. was daraus geworden ist):", a?.note || "");
@@ -933,15 +992,37 @@ body:not(.retro) .ronly{display:none!important}
   $("#anonClose").addEventListener("click", () => $("#anonModal").classList.remove("on"));
   $("#anonModal").addEventListener("click", e => { if (e.target.id === "anonModal") $("#anonModal").classList.remove("on"); });
 
+  /* ---------- Erfolge ---------- */
+  function renderWins() {
+    const done = state.entries.filter(e => !e.hidden && e.status === "umgesetzt").map(e => ({ t: e.action || e.text, at: e.done || e.created }));
+    const acts = (state.history || []).flatMap(r => r.actions).filter(a => a.status === "erledigt").map(a => ({ t: a.text, at: a.updated || 0 }));
+    const all = [...done, ...acts].sort((a, b) => b.at - a.at);
+    $$("[data-wins]").forEach(el => {
+      el.hidden = !all.length;
+      el.innerHTML = all.length ? `<span class="big">🎉 ${all.length}</span><div><b>Das haben wir schon verbessert</b><ul>${all.slice(0, 3).map(x => `<li>${esc(x.t)}</li>`).join("")}</ul></div>` : "";
+    });
+  }
+  function confetti() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const c = document.createElement("canvas"); c.className = "confetti"; document.body.appendChild(c);
+    const x = c.getContext("2d"); c.width = innerWidth; c.height = innerHeight;
+    const cols = ["#0f766e", "#15803d", "#fbbf24", "#f472b6", "#3b82f6", "#f97316"];
+    const ps = Array.from({ length: 120 }, () => ({ x: innerWidth / 2, y: innerHeight / 3, vx: (Math.random() - .5) * 14, vy: Math.random() * -12 - 4, s: 4 + Math.random() * 6, c: cols[Math.floor(Math.random() * cols.length)], r: Math.random() * 6 }));
+    let n = 0;
+    (function f() { x.clearRect(0, 0, c.width, c.height);
+      for (const p of ps) { p.vy += .35; p.x += p.vx; p.y += p.vy; p.r += .2; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * .6); x.restore(); }
+      if (++n < 110) requestAnimationFrame(f); else c.remove(); })();
+  }
+
   /* ---------- Retro-Ablauf ---------- */
   const STEPS = [
-    { n: "Ankommen", m: "10", v: "check", t: "So geht's uns", d: "Ergebnisse vom Retro-Check zeigen: Stimmung und Typen. Niemand muss etwas sagen." },
+    { n: "Ankommen", m: "10", v: "check", t: "So geht's uns", d: "Mit dem Positiven starten: Danke-Wand und Erfolge auf der Pinnwand, dann die Ergebnisse vom Retro-Check. Niemand muss etwas sagen." },
     { n: "Rückblick", m: "5", v: "history", t: "Was wurde aus der letzten Retro?", d: "Offene Maßnahmen durchgehen und den Status setzen: erledigt, läuft oder verworfen." },
     { n: "Sammeln", m: "20", v: "drop", t: "Still schreiben", d: "Timer auf 8 Minuten. Jeder wirft Gedanken in die passende Zone, ein Gedanke pro Zettel, keine Namen.", timer: 8 },
-    { n: "Gewichten", m: "7", v: "board", layout: "boat", t: "Abstimmen", d: "Alle gehen das Segelboot durch und klicken bei allem, was sie auch so sehen, auf „Geht mir auch so“." },
+    { n: "Gewichten", m: "7", v: "board", layout: "boat", t: "Abstimmen", d: "Zuerst den Wind feiern: Was läuft gut? Dann Anker und Felsen durchgehen und bei allem, was ihr auch so seht, auf „Geht mir auch so“ klicken." },
     { n: "Kleingruppen", m: "23", v: "board", layout: "list", filter: "offen", t: "Top 3 in Gruppen", d: "Die drei Anker und Felsen mit den meisten Stimmen sind eure Top 3. „Top 3 für Miro“ kopieren, Gruppen bilden, in Miro die Einflusskreise füllen.", timer: 10 },
     { n: "Maßnahmen", m: "12", v: "history", t: "Was machen wir konkret?", d: "Pro Gruppe höchstens eine Maßnahme aus dem inneren Kreis eintragen, mit Pate und Frist." },
-    { n: "Abschluss", m: "8", v: "check", t: "Danke und Ausblick", d: "Danke-Runde im Chat. Fragerunde schließen; vor der nächsten Retro startet ihr hier eine neue Runde." },
+    { n: "Abschluss", m: "8", v: "board", t: "Danke und Ausblick", d: "Jeder schreibt ein Danke oder einen Aha-Moment, die Danke-Wand steht oben auf der Pinnwand. Danach die Fragerunde schließen." },
   ];
   let step = -1;
   function renderSteps() {
