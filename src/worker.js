@@ -63,10 +63,13 @@ async function ensureSchema(db) {
       id INTEGER PRIMARY KEY AUTOINCREMENT, round_id INTEGER, mood INTEGER, type TEXT,
       nerven TEXT, gut TEXT, aendern TEXT, mitreden TEXT, day TEXT)`),
     db.prepare("CREATE TABLE IF NOT EXISTS survey_done (round_id INTEGER, voter TEXT, PRIMARY KEY (round_id, voter))"),
+    db.prepare(`CREATE TABLE IF NOT EXISTS actions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, round_id INTEGER, text TEXT, owner TEXT, due TEXT,
+      status TEXT DEFAULT 'offen', note TEXT, created_at INTEGER, updated_at INTEGER)`),
   ]);
   const r = await db.prepare("SELECT COUNT(*) AS n FROM rounds").first();
   if (!r?.n) {
-    await db.prepare("INSERT INTO rounds (label, open, created_at) VALUES (?, 1, ?)").bind("Retro-Check", Date.now()).run();
+    await db.prepare("INSERT INTO rounds (label, open, created_at) VALUES (?, 1, ?)").bind("Erste Runde", Date.now()).run();
   }
   schemaReady = true;
 }
@@ -233,8 +236,11 @@ async function handleApi(request, env, url) {
     const voter = await voterId(request, env);
     const done = voter ? await db.prepare("SELECT 1 FROM survey_done WHERE round_id = ? AND voter = ?").bind(round.id, voter).first() : null;
     const count = await db.prepare("SELECT COUNT(*) AS n FROM answers WHERE round_id = ?").bind(round.id).first();
-    const out = { round: { id: round.id, label: round.label, open: !!round.open }, done: !!done, count: count?.n || 0 };
-    if (await isRetro(request, env)) out.results = await surveyResults(db, round.id);
+    const retro = await isRetro(request, env);
+    const out = { round: { id: round.id, label: round.label, open: !!round.open, created: round.created_at }, done: !!done, count: count?.n || 0 };
+    // Ergebnisse sieht jeder, der selbst geantwortet hat (damit niemand beim Antworten beeinflusst wird),
+    // und alle, sobald die Runde geschlossen ist.
+    if (retro || done || !round.open) out.results = await surveyResults(db, round.id);
     return json(out);
   }
 
@@ -276,10 +282,69 @@ async function handleApi(request, env, url) {
     const round = await currentRound(db);
     if (body.action === "new") {
       const label = clean(body.label, 60) || "Retro-Check";
-      await db.prepare("INSERT INTO rounds (label, open, created_at) VALUES (?, 1, ?)").bind(label, Date.now()).run();
+      await db.batch([
+        db.prepare("UPDATE rounds SET open = 0"), // alte Runden schließen, ihre Ergebnisse sind dann für alle sichtbar
+        db.prepare("INSERT INTO rounds (label, open, created_at) VALUES (?, 1, ?)").bind(label, Date.now()),
+      ]);
     } else if (body.action === "toggle") {
       await db.prepare("UPDATE rounds SET open = ? WHERE id = ?").bind(round.open ? 0 : 1, round.id).run();
     } else return json({ error: "Unbekannte Aktion." }, 400);
+    return json({ ok: true });
+  }
+
+  // ---------- Verlauf: alle Runden mit Ergebnissen und Maßnahmen (für alle sichtbar) ----------
+  if (path === "/api/history" && method === "GET") {
+    const rounds = (await db.prepare("SELECT * FROM rounds ORDER BY id DESC LIMIT 50").all()).results || [];
+    const acts = (await db.prepare("SELECT * FROM actions ORDER BY id ASC").all()).results || [];
+    const voter = await voterId(request, env);
+    const cur = rounds[0];
+    const doneCur = voter && cur ? await db.prepare("SELECT 1 FROM survey_done WHERE round_id = ? AND voter = ?").bind(cur.id, voter).first() : null;
+    const retro = await isRetro(request, env);
+    const out = [];
+    for (const r of rounds) {
+      const isCur = cur && r.id === cur.id;
+      const hide = isCur && r.open && !doneCur && !retro; // laufende Runde erst nach eigener Antwort
+      const res = await surveyResults(db, r.id);
+      out.push({
+        id: r.id, label: r.label, open: !!r.open, created: r.created_at, current: !!isCur,
+        total: res.total, moods: hide ? null : res.moods, types: hide ? null : res.types,
+        actions: acts.filter(a => a.round_id === r.id).map(a => ({
+          id: a.id, text: a.text, owner: a.owner || "", due: a.due || "", status: a.status, note: a.note || "", updated: a.updated_at,
+        })),
+      });
+    }
+    return json({ rounds: out });
+  }
+
+  // ---------- Maßnahmen (nur im Retro-Modus änderbar) ----------
+  const ACT_STATUS = ["offen", "laeuft", "erledigt", "verworfen"];
+  if (path === "/api/actions" && method === "POST") {
+    if (!(await isRetro(request, env))) return json({ error: "Nur im Retro-Modus." }, 403);
+    let body;
+    try { body = await request.json(); } catch { return json({ error: "Ungültige Anfrage." }, 400); }
+    const text = clean(body.text, 300);
+    if (text.length < 3) return json({ error: "Bitte die Maßnahme kurz beschreiben." }, 400);
+    const round = Number.isInteger(body.round_id) ? { id: body.round_id } : await currentRound(db);
+    const now = Date.now();
+    await db.prepare("INSERT INTO actions (round_id, text, owner, due, status, created_at, updated_at) VALUES (?, ?, ?, ?, 'offen', ?, ?)")
+      .bind(round.id, text, clean(body.owner, 80) || null, clean(body.due, 40) || null, now, now).run();
+    return json({ ok: true });
+  }
+  const actMatch = path.match(/^\/api\/actions\/(\d+)$/);
+  if (actMatch && (method === "PATCH" || method === "DELETE")) {
+    if (!(await isRetro(request, env))) return json({ error: "Nur im Retro-Modus." }, 403);
+    const id = Number(actMatch[1]);
+    if (method === "DELETE") { await db.prepare("DELETE FROM actions WHERE id = ?").bind(id).run(); return json({ ok: true }); }
+    let body;
+    try { body = await request.json(); } catch { return json({ error: "Ungültige Anfrage." }, 400); }
+    const sets = [], vals = [];
+    if (ACT_STATUS.includes(body.status)) { sets.push("status = ?"); vals.push(body.status); }
+    for (const [k, max] of [["text", 300], ["owner", 80], ["due", 40], ["note", 300]]) {
+      if (typeof body[k] === "string") { sets.push(`${k} = ?`); vals.push(clean(body[k], max) || null); }
+    }
+    if (!sets.length) return json({ error: "Nichts zu ändern." }, 400);
+    sets.push("updated_at = ?"); vals.push(Date.now());
+    await db.prepare(`UPDATE actions SET ${sets.join(", ")} WHERE id = ?`).bind(...vals, id).run();
     return json({ ok: true });
   }
 
